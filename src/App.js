@@ -23,7 +23,7 @@ function App() {
                   <Link className="nav-link" to={"/home"}>Home</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to={"/sign-in"}>Login</Link>
+                  <Link className="nav-link" to={"/login"}>Login</Link>
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to={"/register"}>Register</Link>
@@ -38,17 +38,13 @@ function App() {
             </div>
           </div>
         </nav>
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <Switch>
-              <Route exact path='/home' component={Home} />
-              <Route path="/sign-in" component={Login} />
-              <Route path="/register" component={Register} />
-              <Route path='/calendar' component={Calendar} />
-              <Route path="/settings" component={Settings} />
-            </Switch>
-          </div>
-        </div>
+          <Switch>
+            <Route exact path='/home' component={Home} />
+            <Route path="/login"      component={Login} />
+            <Route path="/register"   component={Register} />
+            <Route path='/calendar'   component={Calendar} />
+            <Route path="/settings"   component={Settings} />
+          </Switch>
       </div>
     </Router>
   );
