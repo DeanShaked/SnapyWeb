@@ -2,21 +2,25 @@ import React from "react";
 import axios from 'axios';
 
 export default class Register extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            fullname:'',
+            fullName:'',
             email:'',
             username:'',
             password:'',
         };
+        this.changeFullName = this.changeFullName.bind(this)
+        this.changeEmail = this.changeEmail.bind(this)
+        this.changeUsername = this.changeUsername.bind(this)
+        this.changePassword = this.changePassword.bind(this)
     }
 
-    onSubmit(event){
+    onSubmit = (event) => {
         event.preventDefault()
 
         const registered = {
-            fullname:this.state.fullname,
+            fullName:this.state.fullName,
             email:this.state.email,
             username:this.state.username,
             password:this.state.password
@@ -26,29 +30,29 @@ export default class Register extends React.Component {
         .then(response => console.log(response.data))
 
         this.setState({
-            fullname:'',
+            fullName:'',
             email:'',
             username:'',
             password:'',
         })
     }
 
-    changeFullName(event){
+    changeFullName = (event) =>{
         this.setState({
-            fullname:event.target.value
+            fullName:event.target.value
         })
     }
-    changeEmail(event){
+    changeEmail = (event) => {
         this.setState({
             email:event.target.value
         })
     }
-    changeUsername(event){
+    changeUsername = (event) => {
         this.setState({
             username:event.target.value
         })
     }
-    changePassword(event){
+    changePassword = (event) => {
         this.setState({
             password:event.target.value
         })
@@ -57,7 +61,7 @@ export default class Register extends React.Component {
         return(
         <div className="auth-wrapper">
             <div className="auth-inner">
-                <form onSubmit={this.onSubmit.bind(this)}>
+                <form onSubmit={this.onSubmit}>
                     <h3>Register</h3>
 
                     <div className="form-group">
@@ -65,8 +69,8 @@ export default class Register extends React.Component {
                         <input type="text"
                         className="form-control"
                         placeholder="Enter Full Name"
-                        onChange={this.changeFullName.bind(this)}
-                        value={this.fullname}
+                        onChange={this.changeFullName}
+                        value={this.state.fullName}
                          />
                     </div>
 
@@ -75,8 +79,8 @@ export default class Register extends React.Component {
                         <input type="email"
                         className="form-control"
                         placeholder="Enter Email"
-                        onChange={this.changeEmail.bind(this)}
-                        value={this.email} />
+                        onChange={this.changeEmail}
+                        value={this.state.email} />
                     </div>
 
                     <div className="form-group">
@@ -84,8 +88,8 @@ export default class Register extends React.Component {
                         <input type="text"
                         className="form-control"
                         placeholder="Enter Username"
-                        onChange={this.changeUsername.bind(this)}
-                        value={this.username}
+                        onChange={this.changeUsername}
+                        value={this.state.username}
                            />
                     </div>
 
@@ -94,11 +98,11 @@ export default class Register extends React.Component {
                         <input type="password"
                         className="form-control"
                         placeholder="Enter Password"
-                        onChange={this.changePassword.bind(this)}
-                        value={this.password} />
+                        onChange={this.changePassword}
+                        value={this.state.password} />
                     </div>
 
-                    <input type="submit" className="btn btn-primary btn-block" value="Register"></input>
+                    <input type="submit" className="btn btn-primary btn-block" value="Register" onSubmit={this.onSubmit}></input>
 
                     <p className="forgot-password text-right">
                         Already registered <a href="#">sign in?</a>

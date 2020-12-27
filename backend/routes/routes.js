@@ -4,7 +4,7 @@ const router = express.Router()
 const registerTemplateCopy = require('../models/RegisterModels')
 const bcrypt = require('bcrypt')
 
-router.post('/signup', async (request, response) => {
+router.post('/register', async (request, response, next) => {
 
     const saltPassword = await bcrypt.genSalt(10)
     const securePassword = await bcrypt.hash(request.body.passowrd,saltPassword)
@@ -22,6 +22,8 @@ router.post('/signup', async (request, response) => {
     .catch(error => {
         response.json(error)
     })
-})  
+})
+
+app.post('login', async )
 
 module.exports = router
