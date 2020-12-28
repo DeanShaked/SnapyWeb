@@ -1,29 +1,77 @@
 const { response } = require("express")
 const express = require("express")
 const router = express.Router()
-const registerTemplateCopy = require('../models/RegisterModels')
 const bcrypt = require('bcrypt')
+const User = require('../models/User')
 
-router.post('/register', async (request, response, next) => {
 
-    const saltPassword = await bcrypt.genSalt(10)
-    const securePassword = await bcrypt.hash(request.body.passowrd,saltPassword)
+router.post('/register', (req, res, next) => {
 
-    const registerUser = new registerTemplateCopy({
-         fullName:request.body.fullName,
-         username:request.body.username,
-         email:request.body.email,
-         passowrd:securePassword,
-    })
-    registerUser.save()
-    .then(data => {
-        response.json(data)
-    })
-    .catch(error => {
-        response.json(error)
-    })
+    const { body } = req
+    const {
+        fullName,
+        email,
+        username,
+        password
+    } = body
+
+    if (!fullName) {
+        return res.send({
+            success: false,
+            message: 'Error: FullName cannot be blank.'
+        })
+    }
+    if (!email) {
+        return res.send({
+            success: false,
+            message: 'Error: Email cannot be blank.'
+        })
+    }
+    if (!username) {
+        return res.send({
+            success: false,
+            message: 'Error: Username cannot be blank.'
+        })
+    }
+    if (!password) {
+        return res.send({
+            success: false,
+            message: 'Error: Password cannot be blank.'
+        })
+    }
+    email = email.toLowerCase();
+
+    // 1. Verify email doesn't exist
+    // 2. Save
+    User.find({
+        email:email
+    },(error,previousUsers) =>{
+        if(error){
+            return res.send('Error: Server error')
+        }
+        else if (previousUsers.length > 0) {
+            return res.send('Error: User already exists.')
+        }
+        const newUser = new User()
+        newUser.fullName = fullName
+        newUser.email = email
+        newUser.username = username
+        newUser.password = newUser.generateHash(password,saltPassword)
+        
+        newUser.save((error, user) => {
+            if (error) {
+                return res.send({
+                    success: false,
+                    message: 'Error: Server Error'
+                })
+            }
+            return res.send({
+                success: true,
+                message: 'Registered'
+            })
+        })
+    }
+    )
 })
-
-app.post('login', async )
 
 module.exports = router
