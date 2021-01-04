@@ -1,12 +1,13 @@
-const { response } = require("express")
-const express = require("express")
+const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const User = require('../models/User')
+const UserSession = require('../models/UserSession')
 
 
-router.post('/register', (req, res, next) => {
+router.post('/register', (req, res) => {
 
+    console.log("eloo")
     const { body } = req
     const {
         fullName,
@@ -43,10 +44,11 @@ router.post('/register', (req, res, next) => {
 
     // 1. Verify email doesn't exist
     // 2. Save
+
     User.find({
         email:email
-    },(error,previousUsers) =>{
-        if(error){
+    }, (error, previousUsers) => {
+        if (error) {
             return res.send('Error: Server error')
         }
         else if (previousUsers.length > 0) {
@@ -65,13 +67,81 @@ router.post('/register', (req, res, next) => {
                     message: 'Error: Server Error'
                 })
             }
-            return res.send({
+            return res.send({ 
                 success: true,
                 message: 'Registered'
             })
         })
     }
     )
+})
+
+
+router.post('/login', (req, res) => {
+    const { body } = req
+    const {
+        email,
+        password
+    } = body
+
+    if (!email) {
+        return res.send({
+            success: false,
+            message: 'Error: Email cannot be blank.'
+        })
+    }
+    if (!password) {
+        return res.send({
+            success: false,
+            message: 'Error: Password cannot be blank.'
+        })
+    }
+
+    email = email.toLowerCase();
+
+    User.find({
+        email:email
+    }, (error, users) => {
+        if (error) {
+            return res.send({
+                success: false,
+                message: 'Server Error'
+            })
+        }
+        if (users.length != 1) {
+            return res.send({
+                success: false,
+                message: 'Invalid user'
+            })
+        }
+
+        const user = users[0]
+
+        if (!user.validPassword(passwrod)){
+            return res.send({
+                success: false,
+                message: 'Invalid password'
+            })
+        }
+
+        const userSession = new UserSession
+        userSession.userId = user._id
+        userSession.save((error, doc) => {
+            if (error) {
+                return res.send({
+                    success: false,
+                    message: 'Error: Server Error'
+                })
+            }
+            
+            return res.send({
+                success: true,
+                message: 'Valid Sign In',
+                token: doc._id
+            })
+        })
+
+    })
 })
 
 module.exports = router

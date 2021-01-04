@@ -26,7 +26,7 @@ export default class Register extends React.Component {
             password:this.state.password
         }
 
-        axios.post('http://localhost:4000/register', registered)
+        axios.post("http://localhost:4000/register", registered)
         .then(response => console.log(response.data))
 
         this.setState({
@@ -102,7 +102,7 @@ export default class Register extends React.Component {
                         value={this.state.password} />
                     </div>
 
-                    <input type="submit" className="btn btn-primary btn-block" value="Register" onSubmit={this.onSubmit}></input>
+                    <input type="submit" className="btn btn-primary btn-block" value="Register" ></input>
 
                     <p className="forgot-password text-right">
                         Already registered <a href="#">sign in?</a>
