@@ -22,13 +22,13 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    date:{
+    date: {
         type: Date,
         default: Date.now()
     }
 })
 
-UserSchema.methods.genrateHash = (password) => {
+UserSchema.methods.generateHash = (password) => {
     return bcrypt.hashSync(password,bcrypt.genSaltSync(8),null);
 }
 

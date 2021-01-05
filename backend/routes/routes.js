@@ -8,7 +8,7 @@ const UserSession = require('../models/UserSession')
 router.post('/register', (req, res) => {
 
     const { body } = req
-    const {
+    var {
         fullName,
         email,
         username,
@@ -39,11 +39,13 @@ router.post('/register', (req, res) => {
             message: 'Error: Password cannot be blank.'
         })
     }
+    
     email = email.toLowerCase();
 
     // 1. Verify email doesn't exist
     // 2. Save
 
+    
     User.find({
         email:email
     }, (err, previousUsers) => {
@@ -54,12 +56,12 @@ router.post('/register', (req, res) => {
             return res.send('Error: User already exists.')
         }
 
-        var newUser = new User()
+        const newUser = new User()
         newUser.fullName = fullName
         newUser.email = email
         newUser.username = username
-        newUser.password = newUser.generateHash(password,saltPassword)
-        
+        newUser.password = newUser.generateHash(password)
+    
         newUser.save((err, user) => {
             if (err) {
                 return res.send({
@@ -74,6 +76,7 @@ router.post('/register', (req, res) => {
         })
     }
     )
+    
 })
 
 

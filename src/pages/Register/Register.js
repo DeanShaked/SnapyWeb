@@ -26,6 +26,7 @@ export default class Register extends React.Component {
             username:this.state.username,
             password:this.state.password
         }
+        
         axios.post("http://localhost:4000/register", registered)
         .then(response => console.log(response.data))
 
