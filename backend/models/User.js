@@ -36,4 +36,4 @@ UserSchema.methods.validPassword = (password) => {
     return bcrypt.compareSync(password,this.password);
 }
 
-module.exports = mongoose.model('mytable', UserSchema)
+module.exports = mongoose.model('Users', UserSchema)

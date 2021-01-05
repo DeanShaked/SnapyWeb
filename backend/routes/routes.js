@@ -7,7 +7,6 @@ const UserSession = require('../models/UserSession')
 
 router.post('/register', (req, res) => {
 
-    console.log("eloo")
     const { body } = req
     const {
         fullName,
@@ -47,21 +46,22 @@ router.post('/register', (req, res) => {
 
     User.find({
         email:email
-    }, (error, previousUsers) => {
-        if (error) {
+    }, (err, previousUsers) => {
+        if (err) {
             return res.send('Error: Server error')
         }
         else if (previousUsers.length > 0) {
             return res.send('Error: User already exists.')
         }
-        const newUser = new User()
+
+        var newUser = new User()
         newUser.fullName = fullName
         newUser.email = email
         newUser.username = username
         newUser.password = newUser.generateHash(password,saltPassword)
         
-        newUser.save((error, user) => {
-            if (error) {
+        newUser.save((err, user) => {
+            if (err) {
                 return res.send({
                     success: false,
                     message: 'Error: Server Error'

@@ -17,6 +17,7 @@ export default class Register extends React.Component {
     }
 
     onSubmit = (event) => {
+        
         event.preventDefault()
 
         const registered = {
@@ -25,7 +26,6 @@ export default class Register extends React.Component {
             username:this.state.username,
             password:this.state.password
         }
-
         axios.post("http://localhost:4000/register", registered)
         .then(response => console.log(response.data))
 
@@ -33,7 +33,7 @@ export default class Register extends React.Component {
             fullName:'',
             email:'',
             username:'',
-            password:'',
+            password:''
         })
     }
 
@@ -57,6 +57,7 @@ export default class Register extends React.Component {
             password:event.target.value
         })
     }
+    
     render(){
         return(
         <div className="auth-wrapper">
