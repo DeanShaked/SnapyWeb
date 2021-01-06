@@ -1,33 +1,83 @@
 import React from "react";
+import axios from 'axios';
+export default class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email:'',
+            password:'',
+        };
+        this.changeEmail = this.changeEmail.bind(this)
+        this.changePassword = this.changePassword.bind(this)
+    }
 
-export default function Login() {
-    return (
-        <div className="auth-wrapper">
-            <div className="auth-inner">
-                <form>
-                    <h3>Login</h3>
-                    <div className="form-group">
-                        <label>Email address</label>
-                        <input type="email" className="form-control" placeholder="Enter email" />
-                    </div>
+    onSubmit = (event) => {
+        
+        event.preventDefault()
 
-                    <div className="form-group">
-                        <label>Password</label>
-                        <input type="password" className="form-control" placeholder="Enter password" />
-                    </div>
+        const checkLogin = {
+            email:this.state.email,
+            password:this.state.password
+        }
+        
+        axios.post("http://localhost:4000/login", checkLogin)
+        .then(response => {console.log(response.data)})
+        
 
-                    <div className="form-group">
-                        <div className="custom-control custom-checkbox">
-                            <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                            <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
+        this.setState({
+            email:'',
+            password:''
+        })
+    }
+
+    changeEmail = (event) => {
+        this.setState({
+            email:event.target.value
+        })
+    }
+
+    changePassword = (event) => {
+        this.setState({
+            password:event.target.value
+        })
+    }
+
+    render(){
+        return (
+            <div className="auth-wrapper">
+                <div className="auth-inner">
+                    <form onSubmit={this.onSubmit}>
+                        <h3>Login</h3>
+
+                        <div className="form-group">
+                            <label>Email address</label>
+                            <input 
+                            type="email"
+                            className="form-control" 
+                            placeholder="Enter email"
+                            onChange={this.changeEmail}
+                            value={this.state.email} 
+                            />
                         </div>
-                    </div>
-                    <button type="submit" className="btn btn-primary btn-block">Login</button>
-                    <p className="forgot-password text-right">
-                        Forgot <a href="#">password?</a>
-                    </p>
-                </form>
+
+                        <div className="form-group">
+                            <label>Password</label>
+                            <input 
+                            type="password" 
+                            className="form-control" 
+                            placeholder="Enter password"
+                            onChange={this.changePassword}
+                            value={this.state.password} 
+                            />
+                        </div>
+
+                        <button type="submit" className="btn btn-primary btn-block">Login</button>
+                        <p className="forgot-password text-right">
+                            Forgot <a href="#">password?</a>
+                        </p>
+                    </form>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }   
 }

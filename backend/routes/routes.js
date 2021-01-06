@@ -42,10 +42,6 @@ router.post('/register', (req, res) => {
     
     email = email.toLowerCase();
 
-    // 1. Verify email doesn't exist
-    // 2. Save
-
-    
     User.find({
         email:email
     }, (err, previousUsers) => {
@@ -79,10 +75,9 @@ router.post('/register', (req, res) => {
     
 })
 
-
 router.post('/login', (req, res) => {
     const { body } = req
-    const {
+    var {
         email,
         password
     } = body
@@ -104,13 +99,15 @@ router.post('/login', (req, res) => {
 
     User.find({
         email:email
-    }, (error, users) => {
-        if (error) {
+    }, (err, users) => {
+        if (err) {
             return res.send({
                 success: false,
                 message: 'Server Error'
             })
         }
+
+        // incase we get 0 users
         if (users.length != 1) {
             return res.send({
                 success: false,
@@ -119,8 +116,8 @@ router.post('/login', (req, res) => {
         }
 
         const user = users[0]
-
-        if (!user.validPassword(passwrod)){
+        
+        if (!user.validPassword(password,user.password)){
             return res.send({
                 success: false,
                 message: 'Invalid password'
@@ -141,7 +138,8 @@ router.post('/login', (req, res) => {
                 success: true,
                 message: 'Valid Sign In',
                 token: doc._id
-            })
+            },
+            )
         })
 
     })
