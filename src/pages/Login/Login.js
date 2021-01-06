@@ -1,11 +1,13 @@
 import React from "react";
 import axios from 'axios';
+import { Redirect } from "react-router-dom";
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email:'',
             password:'',
+            isSignedUp:false
         };
         this.changeEmail = this.changeEmail.bind(this)
         this.changePassword = this.changePassword.bind(this)
@@ -21,7 +23,11 @@ export default class Login extends React.Component {
         }
         
         axios.post("http://localhost:4000/login", checkLogin)
-        .then(response => {console.log(response.data)})
+        .then(res => {
+            if (res.status === 200) {
+              this.setState({ isSignedUp: true });
+            }
+        })
         
 
         this.setState({
@@ -43,6 +49,10 @@ export default class Login extends React.Component {
     }
 
     render(){
+        if (this.state.isSignedUp) {
+            // redirect to home if signed up
+            return <Redirect to = {{ pathname: "/home" }} />;
+        }
         return (
             <div className="auth-wrapper">
                 <div className="auth-inner">

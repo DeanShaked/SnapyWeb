@@ -11,7 +11,6 @@ router.post('/register', (req, res) => {
     var {
         fullName,
         email,
-        username,
         password
     } = body
 
@@ -25,12 +24,6 @@ router.post('/register', (req, res) => {
         return res.send({
             success: false,
             message: 'Error: Email cannot be blank.'
-        })
-    }
-    if (!username) {
-        return res.send({
-            success: false,
-            message: 'Error: Username cannot be blank.'
         })
     }
     if (!password) {
@@ -55,7 +48,6 @@ router.post('/register', (req, res) => {
         const newUser = new User()
         newUser.fullName = fullName
         newUser.email = email
-        newUser.username = username
         newUser.password = newUser.generateHash(password)
     
         newUser.save((err, user) => {
@@ -141,6 +133,65 @@ router.post('/login', (req, res) => {
             },
             )
         })
+
+    })
+})
+
+router.post('/verify', (req, res) => {
+    const { query } = req;
+    const { token } = query;
+    
+    UserSession.find({
+        _id: token,
+        isDeleted: false
+    }, (err, session) => {
+        if (err) {
+            return res.send({
+                success: false,
+                message: "Error: Server error"
+            })
+        }
+        if (session.length != 1) {
+            return res.send({ 
+                success: false,
+                message: "Invalid Token"
+            })
+        }
+        else {
+            return res.send({
+                success: true,
+                message: "Good"
+            })
+        }
+
+    })
+})
+
+router.post('/logout', (req, res) => {
+    const { query } = req;
+    const { token } = query;
+    
+    UserSession.findOneAndUpdate({
+        _id: token,
+        isDeleted: false
+    }, {
+        $set:{isDeleted:true}
+    },
+    null,
+    (err, session) => {
+        if (err) {
+            return res.send({
+                success: false,
+                message: "Error: Server error"
+            })
+        }
+
+        else {
+            return res.send({
+                success: true,
+                message: "Good"
+            })
+        }
 
     })
 })

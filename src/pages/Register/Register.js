@@ -7,12 +7,10 @@ export default class Register extends React.Component {
         this.state = {
             fullName:'',
             email:'',
-            username:'',
             password:'',
         };
         this.changeFullName = this.changeFullName.bind(this)
         this.changeEmail = this.changeEmail.bind(this)
-        this.changeUsername = this.changeUsername.bind(this)
         this.changePassword = this.changePassword.bind(this)
     }
 
@@ -23,17 +21,15 @@ export default class Register extends React.Component {
         const registered = {
             fullName:this.state.fullName,
             email:this.state.email,
-            username:this.state.username,
             password:this.state.password
         }
         
         axios.post("http://localhost:4000/register", registered)
-        .then(response => console.log(response.data))
+        .then(res => console.log(res.data))
 
         this.setState({
             fullName:'',
             email:'',
-            username:'',
             password:''
         })
     }
@@ -46,11 +42,6 @@ export default class Register extends React.Component {
     changeEmail = (event) => {
         this.setState({
             email:event.target.value
-        })
-    }
-    changeUsername = (event) => {
-        this.setState({
-            username:event.target.value
         })
     }
     changePassword = (event) => {
@@ -83,16 +74,6 @@ export default class Register extends React.Component {
                         placeholder="Enter Email"
                         onChange={this.changeEmail}
                         value={this.state.email} />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Username</label>
-                        <input type="text"
-                        className="form-control"
-                        placeholder="Enter Username"
-                        onChange={this.changeUsername}
-                        value={this.state.username}
-                           />
                     </div>
 
                     <div className="form-group">
