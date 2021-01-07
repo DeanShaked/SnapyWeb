@@ -5,7 +5,7 @@ const User = require('../models/User')
 const UserSession = require('../models/UserSession')
 
 
-router.post('/register', (req, res) => {
+router.post('/register', (req, res, next) => {
 
     const { body } = req
     var {
@@ -67,7 +67,7 @@ router.post('/register', (req, res) => {
     
 })
 
-router.post('/login', (req, res) => {
+router.post('/login', (req, res, next) => {
     const { body } = req
     var {
         email,
@@ -129,7 +129,7 @@ router.post('/login', (req, res) => {
             return res.send({
                 success: true,
                 message: 'Valid Sign In',
-                token: doc._id
+                token: user._id
             },
             )
         })
@@ -137,7 +137,7 @@ router.post('/login', (req, res) => {
     })
 })
 
-router.post('/verify', (req, res) => {
+router.post('/verify', (req, res, next) => {
     const { query } = req;
     const { token } = query;
     
@@ -167,7 +167,7 @@ router.post('/verify', (req, res) => {
     })
 })
 
-router.post('/logout', (req, res) => {
+router.post('/logout', (req, res, next) => {
     const { query } = req;
     const { token } = query;
     
@@ -179,6 +179,7 @@ router.post('/logout', (req, res) => {
     },
     null,
     (err, session) => {
+        console.log(token)
         if (err) {
             return res.send({
                 success: false,
