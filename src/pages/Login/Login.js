@@ -17,24 +17,68 @@ export default class Login extends React.Component {
         
         event.preventDefault()
 
-        const checkLogin = {
+        const loggedIn = {
             email:this.state.email,
             password:this.state.password
         }
-        
-        axios.post("http://localhost:4000/login", checkLogin)
+
+        axios.post("http://localhost:4000/login", loggedIn) 
         .then(res => {
-            if (res.status === 200) {
-              this.setState({ isSignedUp: true });
+            if (res.data.success === true) {
+                console.log(res.data)
+                this.setState({ isSignedUp: true });
+            }
+            else {
+                console.log(res.data)
             }
         })
-        
+
 
         this.setState({
             email:'',
             password:''
         })
     }
+
+    onSignIn() {
+        // Grab state
+        const {
+          loginEmail,
+          signInPassword,
+        } = this.state;
+        this.setState({
+          isLoading: true,
+        });
+        // Post request to backend
+        fetch('/signin', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: loginEmail,
+            password: signInPassword,
+          }),
+        }).then(res => res.json())
+          .then(json => {
+            console.log('json', json);
+            if (json.success) {
+              setInStorage('the_main_app', { token: json.token });
+              this.setState({
+                signInError: json.message,
+                isLoading: false,
+                signInPassword: '',
+                loginEmail: '',
+                token: json.token,
+              });
+            } else {
+              this.setState({
+                signInError: json.message,
+                isLoading: false,
+              });
+            }
+          });
+      }
 
     changeEmail = (event) => {
         this.setState({
@@ -49,6 +93,7 @@ export default class Login extends React.Component {
     }
 
     render(){
+        console.log(this.state.isSignedUp)
         if (this.state.isSignedUp) {
             // redirect to home if signed up
             return <Redirect to = {{ pathname: "/home" }} />;

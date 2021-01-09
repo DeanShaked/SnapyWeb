@@ -1,6 +1,5 @@
 import React from "react";
 import axios from 'axios';
-
 export default class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -58,7 +57,7 @@ export default class Register extends React.Component {
                     <h3>Register</h3>
 
                     <div className="form-group">
-                        <label>Full Name</label>
+                        <label>Full Name <span style={{color : 'red'}}>*</span></label>
                         <input type="text"
                         className="form-control"
                         placeholder="Enter Full Name"
@@ -68,7 +67,7 @@ export default class Register extends React.Component {
                     </div>
 
                     <div className="form-group">
-                        <label>Email address</label>
+                        <label>Email address <span style={{color : 'red'}}>*</span></label>
                         <input type="email"
                         className="form-control"
                         placeholder="Enter Email"
@@ -77,7 +76,7 @@ export default class Register extends React.Component {
                     </div>
 
                     <div className="form-group">
-                        <label>Password</label>
+                        <label>Password <span style={{color : 'red'}}>*</span></label>
                         <input type="password"
                         className="form-control"
                         placeholder="Enter Password"
@@ -88,7 +87,8 @@ export default class Register extends React.Component {
                     <input type="submit" className="btn btn-primary btn-block" value="Register" ></input>
 
                     <p className="forgot-password text-right">
-                        Already registered <a href="#">sign in?</a>
+                        Already registered <a href="/login">sign in ?</a>
+                        
                     </p>
                 </form>
             </div>

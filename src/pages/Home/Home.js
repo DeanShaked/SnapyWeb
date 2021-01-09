@@ -1,6 +1,10 @@
 import React from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router-dom'
+import {
+    setInStorage,
+    getFromStorage,
+  } from '../../utils/Storage';
 
 export default class Home extends React.Component {
 
@@ -9,12 +13,12 @@ export default class Home extends React.Component {
         this.state ={
             isLoggedOut: false
         }
+        this.logout = this.logout.bind(this)
     }
     
     logout = () => {
-        axios.post("http://localhost:4000/logout")
+        axios.get("http://localhost:4000/logout")
         .then(res => {console.log(res.data)})
-
     }
 
     render() {
@@ -28,7 +32,7 @@ export default class Home extends React.Component {
                 <h3>Event Title</h3>
                 <label>Event Name</label>
                 <input type="text" className="form-control" placeholder="Event name" />
-                <button value="Logout" onClick={this.logout}></button>
+                {/* <button value="Logout" onClick={this.logout}></button> */}
             </div>
         </div>
         )
