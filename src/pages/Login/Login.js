@@ -1,84 +1,49 @@
 import React from "react";
-import axios from 'axios';
-import { Redirect } from "react-router-dom";
-export default class Login extends React.Component {
+import axios from 'axios'
+import { Redirect } from "react-router-dom";import {
+    setInStorage,
+  } from '../../utils/Storage';
+  
+  export default class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email:'',
             password:'',
-            isSignedUp:false
+            isLoggedIn: false,
+            loginError: ''    
         };
         this.changeEmail = this.changeEmail.bind(this)
         this.changePassword = this.changePassword.bind(this)
     }
-
     onSubmit = (event) => {
-        
+      
         event.preventDefault()
 
         const loggedIn = {
-            email:this.state.email,
-            password:this.state.password
+          email:this.state.email,
+          password:this.state.password
         }
-
         axios.post("http://localhost:4000/login", loggedIn) 
         .then(res => {
-            if (res.data.success === true) {
-                console.log(res.data)
-                this.setState({ isSignedUp: true });
-            }
-            else {
-                console.log(res.data)
-            }
-        })
-
-
-        this.setState({
-            email:'',
-            password:''
-        })
-    }
-
-    onSignIn() {
-        // Grab state
-        const {
-          loginEmail,
-          signInPassword,
-        } = this.state;
-        this.setState({
-          isLoading: true,
+          console.log(res.data)
+        if (res.success) {
+          console.log(res.json)
+            setInStorage('calendaro', { token: res.token });
+            this.setState({
+              loginError: res.message,
+              isLoggedIn: true,
+              email: '',
+              password: '',
+              token: res.token,
+            });
+          } else {
+            this.setState({
+              loginError: res.message,
+            });
+          }
         });
-        // Post request to backend
-        fetch('/signin', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: loginEmail,
-            password: signInPassword,
-          }),
-        }).then(res => res.json())
-          .then(json => {
-            console.log('json', json);
-            if (json.success) {
-              setInStorage('the_main_app', { token: json.token });
-              this.setState({
-                signInError: json.message,
-                isLoading: false,
-                signInPassword: '',
-                loginEmail: '',
-                token: json.token,
-              });
-            } else {
-              this.setState({
-                signInError: json.message,
-                isLoading: false,
-              });
-            }
-          });
-      }
+    }
 
     changeEmail = (event) => {
         this.setState({
@@ -93,10 +58,8 @@ export default class Login extends React.Component {
     }
 
     render(){
-        console.log(this.state.isSignedUp)
-        if (this.state.isSignedUp) {
-            // redirect to home if signed up
-            return <Redirect to = {{ pathname: "/home" }} />;
+        if (this.state.isLoggedIn) {
+          return <Redirect to = {{ pathname: "/home" }} />;
         }
         return (
             <div className="auth-wrapper">
@@ -131,6 +94,7 @@ export default class Login extends React.Component {
                             Forgot <a href="#">password?</a>
                         </p>
                     </form>
+                    <div className="error-message">{this.state.loginError}</div>
                 </div>
             </div>
         );

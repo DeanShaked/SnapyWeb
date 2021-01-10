@@ -14,6 +14,3 @@ app.use(express.json())
 app.use(cors())
 app.use('/', routesUrls)
 app.listen(4000,() => console.log("server is up and running"))
-
-
-// mongodb+srv://Dean:Dean@cluster0.qmrdd.mongodb.net/Users?retryWrites=true&w=majority

@@ -1,6 +1,9 @@
 import React from "react";
 import axios from 'axios';
+import 'whatwg-fetch';
 export default class Register extends React.Component {
+    
+    
     constructor(props) {
         super(props);
         this.state = {

@@ -15,10 +15,59 @@ export default class Home extends React.Component {
         }
         this.logout = this.logout.bind(this)
     }
-    
-    logout = () => {
-        axios.get("http://localhost:4000/logout")
-        .then(res => {console.log(res.data)})
+    componentDidMount() {
+        const obj = getFromStorage('calendaro');
+        if (obj && obj.token) {
+          const { token } = obj;
+          // Verify token
+          fetch('/api/account/verify?token=' + token)
+            .then(res => res.json())
+            .then(json => {
+              if (json.success) {
+                this.setState({
+                  token,
+                  isLoading: false
+                });
+              } else {
+                this.setState({
+                  isLoading: false,
+                });
+              }
+            });
+        } else {
+          this.setState({
+            isLoading: false,
+          });
+        }
+    }
+
+    logout() {
+        this.setState({
+            isLoading: true,
+        });
+        const obj = getFromStorage('calendaro');
+        if (obj && obj.token) {
+            const { token } = obj;
+            // Verify token
+            fetch('/api/account/logout?token=' + token)
+            .then(res => res.json())
+            .then(json => {
+                if (json.success) {
+                this.setState({
+                    token: '',
+                    isLoading: false
+                });
+                } else {
+                this.setState({
+                    isLoading: false,
+                });
+                }
+            });
+        } else {
+            this.setState({
+            isLoading: false,
+            });
+        }
     }
 
     render() {
@@ -32,7 +81,7 @@ export default class Home extends React.Component {
                 <h3>Event Title</h3>
                 <label>Event Name</label>
                 <input type="text" className="form-control" placeholder="Event name" />
-                {/* <button value="Logout" onClick={this.logout}></button> */}
+                <button value="Logout" onClick={this.logout}></button>
             </div>
         </div>
         )

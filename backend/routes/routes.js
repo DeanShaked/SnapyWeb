@@ -133,7 +133,8 @@ router.post('/login', (req, res, next) => {
             return res.send({
                 success: true,
                 message: 'Valid Sign In',
-                token: doc._id
+                token: doc._id,
+                isLoggedIn : false
             },
             )
         })
@@ -182,7 +183,9 @@ router.get('/logout', (req, res, next) => {
         _id: token,
         isDeleted: false
     }, {
-        $set:{isDeleted:true}
+        $set:{
+            isDeleted:true
+        }
     },
     null,
     (err, session) => {

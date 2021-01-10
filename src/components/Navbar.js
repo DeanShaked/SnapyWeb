@@ -9,7 +9,7 @@ export default function Navbar({main, navitem1, navitem2}) {
         <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-                <Link className="nav-link active" to={`/${main}`}>{main}</Link>
+                <Link className="nav-link" to={`/${main}`}>{main}</Link>
             </li>
             <li className="nav-item">
                 <Link className="nav-link" to={`/${navitem1}`}>{navitem1}</Link>
