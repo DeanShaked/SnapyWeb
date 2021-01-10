@@ -12,10 +12,18 @@ import Navbar from "./components/Navbar"
 
 
 function App() {
+
+  // if (user == loggedIn) {
+  //   <Navbar main="whoweare" navitem1="calendar" navitem2="settings"/>
+  // }
+  // else {
+  //   <Navbar main="home" navitem1="login" navitem2="register"/>
+  // }
+
   return (
     <Router>
       <div className="App">
-        <Navbar/>
+        <Navbar main="home" navitem1="login" navitem2="register"/>
           <Switch>
             <Route exact path='/home' component={Home} />
             <Route path="/login"      component={Login} />
