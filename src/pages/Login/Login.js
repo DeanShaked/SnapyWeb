@@ -10,7 +10,8 @@ import { Redirect } from "react-router-dom";import {
         this.state = {
             email:'',
             password:'',
-            loginError: ''    
+            loginError: '',
+            isLoggedIn: false  
         };
         this.changeEmail = this.changeEmail.bind(this)
         this.changePassword = this.changePassword.bind(this)
@@ -26,7 +27,6 @@ import { Redirect } from "react-router-dom";import {
         axios.post("http://localhost:4000/login", loggedIn) 
         .then(res => {
         if (res.data.success) {
-            console.log(res.data)
             setInStorage('calendaro', { token: res.data.token });
             this.setState({
               loginError: res.message,
@@ -58,43 +58,46 @@ import { Redirect } from "react-router-dom";import {
     render(){
         if (this.state.isLoggedIn) {
           return <Redirect to = {{ pathname: "/home" }} />;
-        }
-        return (
-            <div className="auth-wrapper">
-                <div className="auth-inner">
-                    <form onSubmit={this.onSubmit}>
-                        <h3>Login</h3>
-
-                        <div className="form-group">
-                            <label>Email address</label>
-                            <input 
-                            type="email"
-                            className="form-control" 
-                            placeholder="Enter email"
-                            onChange={this.changeEmail}
-                            value={this.state.email} 
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label>Password</label>
-                            <input 
-                            type="password" 
-                            className="form-control" 
-                            placeholder="Enter password"
-                            onChange={this.changePassword}
-                            value={this.state.password} 
-                            />
-                        </div>
-
-                        <button type="submit" className="btn btn-primary btn-block">Login</button>
-                        <p className="forgot-password text-right">
-                            Forgot <a href="#">password?</a>
-                        </p>
-                    </form>
-                    <div className="error-message">{this.state.loginError}</div>
+        } 
+        else {
+            return (
+                <div className="auth-wrapper">
+                    <div className="auth-inner">
+                        <form onSubmit={this.onSubmit}>
+                            <h3>Login</h3>
+    
+                            <div className="form-group">
+                                <label>Email address</label>
+                                <input 
+                                type="email"
+                                className="form-control" 
+                                placeholder="Enter email"
+                                onChange={this.changeEmail}
+                                value={this.state.email} 
+                                />
+                            </div>
+    
+                            <div className="form-group">
+                                <label>Password</label>
+                                <input 
+                                type="password" 
+                                className="form-control" 
+                                placeholder="Enter password"
+                                onChange={this.changePassword}
+                                value={this.state.password} 
+                                />
+                            </div>
+    
+                            <button type="submit" className="btn btn-primary btn-block">Login</button>
+                            <p className="forgot-password text-right">
+                                Forgot <a href="#">password?</a>
+                            </p>
+                        </form>
+                        <div className="error-message">{this.state.loginError}</div>
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
+    
     }   
 }

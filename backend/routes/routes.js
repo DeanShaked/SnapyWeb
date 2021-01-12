@@ -136,11 +136,11 @@ router.post('/login', (req, res, next) => {
     })
 })
 
-router.get('/api/account/verify', (req, res, next) => {
+router.get('/verify', (req, res, next) => {
     // Get the token
     const { query } = req;
     const { token } = query;
-    // ?token=test
+
     // Verify the token is one of a kind and it's not deleted.
     UserSession.find({
       _id: token,

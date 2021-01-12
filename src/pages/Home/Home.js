@@ -13,68 +13,71 @@ export default class Home extends React.Component {
         this.state ={
             isLoggedOut: false
         }
-        this.logout = this.logout.bind(this)
     }
 
     componentDidMount() {
         const obj = getFromStorage('calendaro');
         if (obj && obj.token) {
-          const { token } = obj;
+          const { token } = obj; 
           // Verify token
-          axios.get('/api/account/verify?token='+token)
-            .then(res => {
-              console.log(res.data)
-              if (res.success) {
-                console.log("here 1")
-                this.setState({
-                  token,
-                });
-              }
-              else{
-                console.log("here 2")
-                this.setState({
-                  isLoggedOut: true
-                })
-              }
-            });
+          console.log(token)
+          axios.get('http://localhost:4000/verify?token=' + token)
+          .then(res => {
+            if (res.data.success) {
+              this.setState({
+                isLoggedOut: false
+              });
+            }
+            else{
+              this.setState({
+                isLoggedOut: true
+              })
+            }
+          });
         }
     }
 
     logout() {
         const obj = getFromStorage('calendaro');
-        console.log(obj)
         if (obj && obj.token) {
             const { token } = obj;
             // Verify token
-            fetch('/api/account/logout?token=' + token)
-            .then(res => res.json())
+            console.log(token)
+            axios.get('http://localhost:4000/logout?token=' + token)
             .then(res => {
                 if (res.data.success) {
                 this.setState({
                     token: '',
-                    isLoggedOut: true
-                });
+                    isLoggedOut: true                
+                  });
+                }
+                else{
+                  this.setState({
+                    isLoggedOut: false
+                  })
                 }
             });
         }
     }
 
     render() {
-      console.log(this.state.isLoggedOut)
         if (this.state.isLoggedOut) {
+          console.log(this.state.isLoggedOut + ", inside")
             // redirect to home if signed up
-            return <Redirect to = {{ pathname: "/login" }} />;
-        }
-        return(
-        <div className="auth-wrapper">
-            <div className="auth-inner">
-                <h3>Event Title</h3>
-                <label>Event Name</label>
-                <input type="text" className="form-control" placeholder="Event name" />
-                <button value="Logout" onClick={this.logout}></button>
+            return <Redirect to = {{ pathname: "/login" }} />
+        } else { 
+          console.log(this.state.isLoggedOut + ", outside")
+          return(
+            <div className="auth-wrapper">
+                <div className="auth-inner">
+                    <h3>Event Title</h3>
+                    <label>Event Name</label>
+                    <input type="text" className="form-control" placeholder="Event name" />
+                    <button value="Logout" onClick={this.logout.bind(this)}></button>
+                </div>
             </div>
-        </div>
-        )
+            )
+        }
     }
 }
 
