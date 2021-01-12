@@ -74,8 +74,6 @@ router.post('/login', (req, res, next) => {
         password
     } = body
 
-    console.log(email)
-
     if (!email) {
         return res.send({
             success: false,
@@ -90,8 +88,6 @@ router.post('/login', (req, res, next) => {
     }
 
     email = email.toLowerCase();
-
-    console.log(email)
 
     User.find({
         email:email
@@ -129,12 +125,10 @@ router.post('/login', (req, res, next) => {
                     message: 'Error: Server Error'
                 })
             }
-            console.log(doc._id)
             return res.send({
                 success: true,
                 message: 'Valid Sign In',
-                token: doc._id,
-                isLoggedIn : false
+                token: doc._id
             },
             )
         })
@@ -142,42 +136,41 @@ router.post('/login', (req, res, next) => {
     })
 })
 
-router.get('/verify', (req, res, next) => {
+router.get('/api/account/verify', (req, res, next) => {
+    // Get the token
     const { query } = req;
     const { token } = query;
-    
+    // ?token=test
+    // Verify the token is one of a kind and it's not deleted.
     UserSession.find({
-        _id: token,
-        isDeleted: false
+      _id: token,
+      isDeleted: false
     }, (err, sessions) => {
-        if (err) {
-            return res.send({
-                success: false,
-                message: "Error: Server error"
-            })
-        }
-        if (sessions.length != 1) {
-            return res.send({ 
-                success: false,
-                message: "Invalid Token"
-            })
-        }
-        else {
-            return res.send({
-                success: true,
-                message: "Good"
-            })
-        }
-
-    })
-})
+      if (err) {
+        console.log(err);
+        return res.send({
+          success: false,
+          message: 'Error: Server error'
+        });
+      }
+      if (sessions.length != 1) {
+        return res.send({
+          success: false,
+          message: 'Error: Invalid'
+        });
+      } else {
+        // DO ACTION
+        return res.send({
+          success: true,
+          message: 'Good'
+        });
+      }
+    });
+  });
 
 router.get('/logout', (req, res, next) => {
     const { query } = req;
     const { token } = query;
-
-    console.log(query)
-    console.log(token)
 
     UserSession.findOneAndUpdate({
         _id: token,
@@ -189,8 +182,8 @@ router.get('/logout', (req, res, next) => {
     },
     null,
     (err, session) => {
-        console.log(token)
         if (err) {
+            console.log(err)
             return res.send({
                 success: false,
                 message: "Error: Server error"

@@ -10,7 +10,6 @@ import { Redirect } from "react-router-dom";import {
         this.state = {
             email:'',
             password:'',
-            isLoggedIn: false,
             loginError: ''    
         };
         this.changeEmail = this.changeEmail.bind(this)
@@ -26,10 +25,9 @@ import { Redirect } from "react-router-dom";import {
         }
         axios.post("http://localhost:4000/login", loggedIn) 
         .then(res => {
-          console.log(res.data)
-        if (res.success) {
-          console.log(res.json)
-            setInStorage('calendaro', { token: res.token });
+        if (res.data.success) {
+            console.log(res.data)
+            setInStorage('calendaro', { token: res.data.token });
             this.setState({
               loginError: res.message,
               isLoggedIn: true,

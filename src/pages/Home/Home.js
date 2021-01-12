@@ -15,65 +15,55 @@ export default class Home extends React.Component {
         }
         this.logout = this.logout.bind(this)
     }
+
     componentDidMount() {
         const obj = getFromStorage('calendaro');
         if (obj && obj.token) {
           const { token } = obj;
           // Verify token
-          fetch('/api/account/verify?token=' + token)
-            .then(res => res.json())
-            .then(json => {
-              if (json.success) {
+          axios.get('/api/account/verify?token='+token)
+            .then(res => {
+              console.log(res.data)
+              if (res.success) {
+                console.log("here 1")
                 this.setState({
                   token,
-                  isLoading: false
-                });
-              } else {
-                this.setState({
-                  isLoading: false,
                 });
               }
+              else{
+                console.log("here 2")
+                this.setState({
+                  isLoggedOut: true
+                })
+              }
             });
-        } else {
-          this.setState({
-            isLoading: false,
-          });
         }
     }
 
     logout() {
-        this.setState({
-            isLoading: true,
-        });
         const obj = getFromStorage('calendaro');
+        console.log(obj)
         if (obj && obj.token) {
             const { token } = obj;
             // Verify token
             fetch('/api/account/logout?token=' + token)
             .then(res => res.json())
-            .then(json => {
-                if (json.success) {
+            .then(res => {
+                if (res.data.success) {
                 this.setState({
                     token: '',
-                    isLoading: false
-                });
-                } else {
-                this.setState({
-                    isLoading: false,
+                    isLoggedOut: true
                 });
                 }
-            });
-        } else {
-            this.setState({
-            isLoading: false,
             });
         }
     }
 
     render() {
+      console.log(this.state.isLoggedOut)
         if (this.state.isLoggedOut) {
             // redirect to home if signed up
-            return <Redirect to = {{ pathname: "/calendar" }} />;
+            return <Redirect to = {{ pathname: "/login" }} />;
         }
         return(
         <div className="auth-wrapper">
