@@ -1,10 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import { Redirect } from 'react-router-dom'
-import {
-    setInStorage,
-    getFromStorage,
-  } from '../../utils/Storage';
+import { getFromStorage } from '../../utils/Storage';
 
 export default class Home extends React.Component {
 
@@ -62,11 +59,9 @@ export default class Home extends React.Component {
 
     render() {
         if (this.state.isLoggedOut) {
-          console.log(this.state.isLoggedOut + ", inside")
             // redirect to home if signed up
             return <Redirect to = {{ pathname: "/login" }} />
         } else { 
-          console.log(this.state.isLoggedOut + ", outside")
           return(
             <div className="auth-wrapper">
                 <div className="auth-inner">
